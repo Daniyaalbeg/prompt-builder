@@ -1,5 +1,5 @@
-const DashboardPage = async ({ children }: { children: React.ReactNode }) => {
-  return children;
+const DashboardPage = async () => {
+  return null;
 };
 
 export default DashboardPage;
