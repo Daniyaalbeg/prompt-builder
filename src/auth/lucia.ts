@@ -1,5 +1,5 @@
 import lucia from "lucia-auth";
-import { web } from "lucia-auth/middleware";
+import { nextjs } from "lucia-auth/middleware";
 import { planetscale } from "@lucia-auth/adapter-mysql";
 import { connection } from "@/db/db"
 import "lucia-auth/polyfill/node";
@@ -11,7 +11,11 @@ const env = process.env.NODE_ENV === "development" ? "DEV" : "PROD";
 export const auth = lucia({
 	adapter: planetscale(connection),
 	env,
-	middleware: web(),
+	middleware: nextjs(),
+	sessionExpiresIn: {
+		activePeriod: 60 * 60 * 24 * 30, // 1 month
+		idlePeriod: 0 // disable session renewal
+	},
 	transformDatabaseUser: (userData) => {
 		return {
 			userId: userData.id,

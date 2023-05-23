@@ -1,10 +1,11 @@
 import { auth } from "@/auth/lucia";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: Request) {
 	const headers = new Headers()
 
-	const authRequest = auth.handleRequest(req, headers)
+	const authRequest = auth.handleRequest({ request, cookies })
 	const session = await authRequest.validate()
 
 	if (!session) {
@@ -17,9 +18,13 @@ export async function POST(req: NextRequest) {
 	await auth.invalidateSession(session.sessionId)
 	authRequest.setSession(null)
 
-	const redirectUrl = req.headers.get('host') ? `http://${req.headers.get('host')}` : '/sign-up'
+	// const redirectUrl = request.headers.get('host') ? `http://${request.headers.get('host')}` : '/sign-up'
 
-	console.log(redirectUrl)
-
-	return NextResponse.redirect(redirectUrl, { headers })
+	// return NextResponse.redirect(redirectUrl, { headers })
+	return new Response(null, {
+		status: 302,
+		headers: {
+			location: "/sign-in"
+		}
+	});
 }

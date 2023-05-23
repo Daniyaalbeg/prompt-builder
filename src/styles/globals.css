@@ -136,3 +136,23 @@ p, h1, h2, h3, h4, h5, h6 {
 #root, #__next {
   isolation: isolate;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar:not(:hover)::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar:not(:hover) {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* .no-scrollbar::-webkit-scrollbar {
+  background: hsl(210 40% 98%);
+} */
+
+/* Hide scrollbar for IE, Edge and Firefox */
+/* .no-scrollbar {
+  background: #f1f1f1;
+} */

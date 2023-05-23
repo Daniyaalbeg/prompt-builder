@@ -1,6 +1,6 @@
 // import { Inter } from 'next/font/google'
 import { Nav } from '@/components/nav'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { TailwindIndicator } from '@/components/utils/tailwind-indicator'
 
 export default function Home() {
   return (

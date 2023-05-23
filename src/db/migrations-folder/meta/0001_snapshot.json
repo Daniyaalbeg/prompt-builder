@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "fb08f0e1-ccd0-40b0-a04b-4d9789c76979",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "05a8b4c4-4b66-45df-90e1-6d281644cf44",
+  "prevId": "fb08f0e1-ccd0-40b0-a04b-4d9789c76979",
   "tables": {
     "ai_model": {
       "name": "ai_model",
@@ -107,6 +107,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "image_url": {
+          "name": "image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "meta_chunks": {
           "name": "meta_chunks",
           "type": "json",
@@ -193,6 +200,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "subject": {
           "name": "subject",
           "type": "text",
@@ -232,6 +246,13 @@
         "category_value_id": {
           "name": "category_value_id",
           "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "weight": {
+          "name": "weight",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
