@@ -1,7 +1,7 @@
 import { db } from "@/db/db";
 import { Prompt } from "@/db/schema";
 import { prompt } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { User } from "lucia-auth";
 import { NewPromptButton } from "@/components/buttons/new-prompts";
 import { PromptSidebar } from "./prompt-sidebar";
@@ -15,14 +15,14 @@ export const SavedPrompts = async ({ user }: Props) => {
     .select()
     .from(prompt)
     .where(eq(prompt.userId, user.userId))
-    .orderBy(prompt.id);
+    .orderBy(desc(prompt.updatedAt));
 
   return (
-    <div className="flex h-full flex-col items-center justify-center py-2">
+    <div className="flex h-full flex-col items-center justify-start py-2">
       <div className="w-full px-2">
         <NewPromptButton />
       </div>
-      <div className="no-scrollbar flex w-full flex-col gap-1 overflow-scroll px-2">
+      <div className="no-scrollbar flex w-full flex-col gap-1 overflow-y-scroll px-2">
         {prompts.map((prompt) => {
           return (
             <PromptSidebar
@@ -33,7 +33,7 @@ export const SavedPrompts = async ({ user }: Props) => {
           );
         })}
       </div>
-      {prompts.length === 0 ? <p>No Prompts</p> : null}
+      {/* {prompts.length === 0 ? <p>No Prompts</p> : null} */}
     </div>
   );
 };

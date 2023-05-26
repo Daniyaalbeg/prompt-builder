@@ -1,63 +1,41 @@
-"use client";
+import { Category, Prompt, categoryValue } from "@/db/schema";
 
-import { Category } from "@/db/schema";
-
-import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { PromptSubject } from "./subject";
-import { useState } from "react";
+import { db } from "@/db/db";
+import { eq } from "drizzle-orm";
+import CategorySelector from "./category-selector";
+import { CategoryMapper } from "./category-mapper";
 
 type Props = {
   categories: Category[];
+  prompt: Prompt;
 };
 
-export const PromptBuiler = ({ categories }: Props) => {
-  const [currentStep, setCurrentStep] = useState(-1);
-
-  const orderData = categories.sort().map((c) => {
-    return {
-      header: c,
-      component: <PromptSubject />,
-    };
+export const PromptBuiler = async ({ categories, prompt }: Props) => {
+  const promises = categories.map(async (c) => {
+    const res = await db
+      .select()
+      .from(categoryValue)
+      .where(eq(categoryValue.categoryId, c.id));
+    return res;
   });
 
-  const nextStep = () => {
-    if (currentStep !== categories.length - 1) setCurrentStep(currentStep + 1);
-  };
-
-  const previousStep = () => {
-    if (currentStep !== -1) setCurrentStep(currentStep - 1);
-  };
+  const allCategoryValues = await Promise.all(promises);
 
   return (
-    <div className="h-1/2 w-full">
-      <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold leading-none tracking-tight">
-            {currentStep === -1
-              ? "Subject"
-              : orderData[currentStep].header.title}
-          </h3>
-        </CardHeader>
-        <CardContent>
-          {currentStep === -1 ? (
-            <PromptSubject />
-          ) : (
-            orderData[currentStep].component
-          )}
-          <div className="mt-4 flex gap-2">
-            <Button
-              className="ml-auto mr-0"
-              variant="secondary"
-              onClick={previousStep}
-            >
-              Previous
-            </Button>
-            <Button onClick={nextStep}> Next </Button>
-          </div>
-        </CardContent>
-        <CardFooter></CardFooter>
-      </Card>
-    </div>
+    <>
+      <CategoryMapper>
+        <PromptSubject prompt={prompt} />
+        {allCategoryValues.map((acv, index) => {
+          return (
+            <CategorySelector
+              key={categories[index].id}
+              category={categories[index]}
+              categoryValues={acv}
+            />
+          );
+        })}
+      </CategoryMapper>
+    </>
   );
 };

@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1684782410561,
-      "tag": "0000_messy_dark_beast",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1684842574208,
-      "tag": "0001_needy_sunfire",
+      "when": 1684963350466,
+      "tag": "0000_legal_shocker",
       "breakpoints": true
     }
   ]

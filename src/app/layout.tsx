@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { QueryProvider } from "@/components/query-client-provider";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -33,7 +34,7 @@ export default function RootLayout({
     >
       <body className="bg-base">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
         <Analytics />
       </body>

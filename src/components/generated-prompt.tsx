@@ -2,9 +2,10 @@
 
 import { usePromptStore } from "@/state/promptState";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import { Prompt } from "@/db/schema";
 
-export const GeneratedPrompt = () => {
-  const { subject } = usePromptStore();
+export const GeneratedPrompt = ({ prompt }: { prompt: Prompt }) => {
+  // const { subject } = usePromptStore();
 
   return (
     <Card className="mt-4">
@@ -14,7 +15,7 @@ export const GeneratedPrompt = () => {
         </h3>
       </CardHeader>
       <CardContent>
-        <p className="">{subject ? subject : "No Content"}</p>
+        <p className="">{prompt.subject ? prompt.subject : "No Content"}</p>
       </CardContent>
     </Card>
   );

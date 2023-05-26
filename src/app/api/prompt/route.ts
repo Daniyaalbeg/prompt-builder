@@ -24,6 +24,8 @@ export const POST = async (request: NextRequest) => {
     id: uuid,
     subject: "",
     userId: user.userId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
     generatedPrompt: "",
     title: "Untitled Prompt",
   });

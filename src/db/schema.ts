@@ -1,4 +1,4 @@
-import { InferModel } from "drizzle-orm";
+import { InferModel, relations } from "drizzle-orm";
 import {
   bigint,
   boolean,
@@ -6,6 +6,7 @@ import {
   mysqlTable,
   smallint,
   text,
+  timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -58,6 +59,10 @@ export const aiModel = mysqlTable("ai_model", {
   name: text("name").notNull(),
 });
 
+// export const aiModelRelations = relations(aiModel, ({ many }) => ({
+//   category: many(category),
+// }));
+
 export const category = mysqlTable("category", {
   id: varchar("id", {
     length: 36,
@@ -70,6 +75,14 @@ export const category = mysqlTable("category", {
     length: 36,
   }).notNull(),
 });
+
+// export const categoryRelations = relations(category, ({ one, many }) => ({
+//   aiModelParent: one(aiModel, {
+//     fields: [category.aiId],
+//     references: [aiModel.id],
+//   }),
+//   categoryValue: many(categoryValue),
+// }));
 
 export const categoryValue = mysqlTable("category_value", {
   id: varchar("id", {
@@ -87,6 +100,13 @@ export const categoryValue = mysqlTable("category_value", {
   }).notNull(),
 });
 
+// export const categoryValueRelations = relations(categoryValue, ({ one }) => ({
+//   parentCategory: one(category, {
+//     fields: [categoryValue.categoryId],
+//     references: [category.id],
+//   }),
+// }));
+
 export const prompt = mysqlTable("prompt", {
   id: varchar("id", {
     length: 36,
@@ -97,20 +117,43 @@ export const prompt = mysqlTable("prompt", {
   title: text("title").notNull(),
   subject: text("subject").notNull(),
   generatedPrompt: text("prompt").notNull(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const promptCategoryMapping = mysqlTable("prompt_category_mapping", {
-  id: varchar("id", {
-    length: 36,
-  }).primaryKey(),
-  promptId: varchar("prompt_id", {
-    length: 36,
-  }).notNull(),
-  categoryValueId: varchar("category_value_id", {
-    length: 36,
-  }).notNull(),
-  weight: smallint("weight").notNull(),
-});
+// export const promptRelations = relations(prompt, ({ many }) => ({
+//   promptToCategories: many(promptCategoryValuesMapping),
+// }));
+
+export const promptCategoryValuesMapping = mysqlTable(
+  "prompt_category_mapping",
+  {
+    id: varchar("id", {
+      length: 36,
+    }).primaryKey(),
+    promptId: varchar("prompt_id", {
+      length: 36,
+    }).notNull(),
+    categoryValueId: varchar("category_value_id", {
+      length: 36,
+    }).notNull(),
+    weight: smallint("weight").notNull(),
+  }
+);
+
+// export const promptToCategoryValuesMapping = relations(
+//   promptCategoryValuesMapping,
+//   ({ one }) => ({
+//     prompt: one(prompt, {
+//       fields: [promptCategoryValuesMapping.promptId],
+//       references: [prompt.id],
+//     }),
+//     categoryValue: one(categoryValue, {
+//       fields: [promptCategoryValuesMapping.categoryValueId],
+//       references: [categoryValue.id],
+//     }),
+//   })
+// );
 
 export type AiModel = InferModel<typeof aiModel>;
 export type Category = InferModel<typeof category>;
