@@ -28,13 +28,12 @@ export const PromptSidebar = ({ id, title }: Props) => {
       return;
     }
     setLoading(true);
-    await fetch(`/api/prompt/title/${id}`, {
+    await fetch(`/api/prompt/${id}/title`, {
       method: "PUT",
       body: JSON.stringify({ title: newTitle || "Untitled" }),
     });
     setEditable(false);
     setLoading(false);
-    router.refresh();
   };
 
   useEffect(() => {
@@ -50,7 +49,7 @@ export const PromptSidebar = ({ id, title }: Props) => {
       className={cn(
         "inline-flex h-10 w-full flex-shrink-0 items-center justify-start rounded-md py-2 pl-4 pr-2 text-sm font-medium text-primary ring-offset-background transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         { "bg-primary/80 text-primary-foreground": params && params.id === id },
-        { "hover:bg-primary/40": params && params.id !== id }
+        { "hover:bg-primary/80": params && params.id !== id }
       )}
     >
       {editable ? (

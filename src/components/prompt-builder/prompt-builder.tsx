@@ -1,4 +1,4 @@
-import { Category, Prompt, categoryValue } from "@/db/schema";
+import { Category, PromptWithCategoryValues, categoryValue } from "@/db/schema";
 
 import { PromptSubject } from "./subject";
 import { db } from "@/db/db";
@@ -8,10 +8,10 @@ import { CategoryMapper } from "./category-mapper";
 
 type Props = {
   categories: Category[];
-  prompt: Prompt;
+  prompt: PromptWithCategoryValues;
 };
 
-export const PromptBuiler = async ({ categories, prompt }: Props) => {
+export const PromptBuilder = async ({ categories, prompt }: Props) => {
   const promises = categories.map(async (c) => {
     const res = await db
       .select()
@@ -23,19 +23,18 @@ export const PromptBuiler = async ({ categories, prompt }: Props) => {
   const allCategoryValues = await Promise.all(promises);
 
   return (
-    <>
-      <CategoryMapper>
-        <PromptSubject prompt={prompt} />
-        {allCategoryValues.map((acv, index) => {
-          return (
-            <CategorySelector
-              key={categories[index].id}
-              category={categories[index]}
-              categoryValues={acv}
-            />
-          );
-        })}
-      </CategoryMapper>
-    </>
+    <CategoryMapper>
+      <PromptSubject prompt={prompt} />
+      {allCategoryValues.map((acv, index) => {
+        return (
+          <CategorySelector
+            key={categories[index].id}
+            prompt={prompt}
+            category={categories[index]}
+            categoryValues={acv}
+          />
+        );
+      })}
+    </CategoryMapper>
   );
 };

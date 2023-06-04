@@ -5,8 +5,9 @@ import { z } from "zod";
 import { db } from "@/db/db";
 import { prompt } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
-const schema = z.object({ title: z.string() });
+const schema = z.object({ subject: z.string() });
 
 export async function PUT(
   request: NextRequest,
@@ -16,8 +17,8 @@ export async function PUT(
     params: { id: string };
   }
 ) {
-  const authRequest = auth.handleRequest({ request, cookies });
-  const { user } = await authRequest.validateUser();
+  const authHandler = auth.handleRequest({ cookies });
+  const { user } = await authHandler.validateUser();
 
   if (!user) {
     return new Response("Not Authorised", {
@@ -42,12 +43,30 @@ export async function PUT(
 
     const res = await db
       .update(prompt)
-      .set({ title: parsedData.data.title, updatedAt: new Date() })
-      .where(and(eq(prompt.id, params.id), eq(prompt.userId, user.userId)));
+      .set({
+        subject: parsedData.data.subject,
+      })
+      .where(and(eq(prompt.userId, user.userId), eq(prompt.id, params.id)));
 
-    return NextResponse.json("Success", { status: 200 });
+    const path = request.nextUrl.searchParams.get("path") || "/";
+    revalidatePath(path);
+
+    if (res.rowsAffected !== 1) {
+      // Wrong insert?
+      return NextResponse.json(
+        { revalidated: true },
+        {
+          status: 400,
+          statusText: "Error occurred",
+        }
+      );
+    }
+
+    return NextResponse.json({});
   } catch (e) {
-    console.log(e);
-    return NextResponse.json("Error occurred", { status: 500 });
+    return NextResponse.json(null, {
+      status: 400,
+      statusText: "Error occurred",
+    });
   }
 }

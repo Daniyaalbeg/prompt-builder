@@ -6,7 +6,7 @@ import { prompt } from "@/db/schema";
 import { randomUUID } from "crypto";
 
 export const POST = async (request: NextRequest) => {
-  const authRequest = auth.handleRequest({ request, cookies });
+  const authRequest = auth.handleRequest({ cookies });
   const { user } = await authRequest.validateUser();
 
   if (!user) {
@@ -32,3 +32,20 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.json({ id: uuid });
 };
+
+// export async function GET(request: NextRequest) {
+//   const authHandler = auth.handleRequest({ cookies });
+//   const { user } = await authHandler.validateUser();
+
+//   if (!user) {
+//     return new Response("Not Authorised", {
+//       status: 401,
+//       statusText: "Not Authorised",
+//       headers: {
+//         "Content-Type": "application/json",
+//         location: "/sign-in",
+//       },
+//     });
+//   }
+
+// }

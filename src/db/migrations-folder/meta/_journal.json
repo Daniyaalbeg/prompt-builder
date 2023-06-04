@@ -8,6 +8,13 @@
       "when": 1684963350466,
       "tag": "0000_legal_shocker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1685228943171,
+      "tag": "0001_bright_trauma",
+      "breakpoints": true
     }
   ]
 }

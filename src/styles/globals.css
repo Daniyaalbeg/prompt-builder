@@ -38,6 +38,8 @@
     --ring: 215 20.2% 65.1%;
  
     --radius: 0.5rem;
+
+    --text-selected: 214deg 30% 91%;
   }
  
   .dark {
@@ -71,6 +73,8 @@
     --ring: 216 34% 17%;
  
     --radius: 0.5rem;
+
+    --text-selected: 220deg 47% 11%;
   }
 }
  

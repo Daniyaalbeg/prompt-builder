@@ -1,14 +1,17 @@
-import { InferModel, relations } from "drizzle-orm";
+import { InferModel, eq, relations } from "drizzle-orm";
 import {
   bigint,
   boolean,
   json,
   mysqlTable,
+  primaryKey,
   smallint,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { db } from "./db";
+// import { createInsertSchema, createSelectSchema, } from "drizzle-zod";
 
 // TODO Use Drizzle relations here https://orm.drizzle.team/docs/rqb
 
@@ -59,9 +62,9 @@ export const aiModel = mysqlTable("ai_model", {
   name: text("name").notNull(),
 });
 
-// export const aiModelRelations = relations(aiModel, ({ many }) => ({
-//   category: many(category),
-// }));
+export const aiModelRelations = relations(aiModel, ({ many }) => ({
+  category: many(category),
+}));
 
 export const category = mysqlTable("category", {
   id: varchar("id", {
@@ -76,13 +79,13 @@ export const category = mysqlTable("category", {
   }).notNull(),
 });
 
-// export const categoryRelations = relations(category, ({ one, many }) => ({
-//   aiModelParent: one(aiModel, {
-//     fields: [category.aiId],
-//     references: [aiModel.id],
-//   }),
-//   categoryValue: many(categoryValue),
-// }));
+export const categoryRelations = relations(category, ({ one, many }) => ({
+  aiModelParent: one(aiModel, {
+    fields: [category.aiId],
+    references: [aiModel.id],
+  }),
+  categoryValue: many(categoryValue),
+}));
 
 export const categoryValue = mysqlTable("category_value", {
   id: varchar("id", {
@@ -100,12 +103,16 @@ export const categoryValue = mysqlTable("category_value", {
   }).notNull(),
 });
 
-// export const categoryValueRelations = relations(categoryValue, ({ one }) => ({
-//   parentCategory: one(category, {
-//     fields: [categoryValue.categoryId],
-//     references: [category.id],
-//   }),
-// }));
+export const categoryValueRelations = relations(
+  categoryValue,
+  ({ one, many }) => ({
+    parentCategory: one(category, {
+      fields: [categoryValue.categoryId],
+      references: [category.id],
+    }),
+    promptToCategoryValuesMapping: many(promptCategoryValuesMapping),
+  })
+);
 
 export const prompt = mysqlTable("prompt", {
   id: varchar("id", {
@@ -121,16 +128,13 @@ export const prompt = mysqlTable("prompt", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-// export const promptRelations = relations(prompt, ({ many }) => ({
-//   promptToCategories: many(promptCategoryValuesMapping),
-// }));
+export const promptRelations = relations(prompt, ({ many }) => ({
+  promptToCategoryValuesMapping: many(promptCategoryValuesMapping),
+}));
 
 export const promptCategoryValuesMapping = mysqlTable(
   "prompt_category_mapping",
   {
-    id: varchar("id", {
-      length: 36,
-    }).primaryKey(),
     promptId: varchar("prompt_id", {
       length: 36,
     }).notNull(),
@@ -138,24 +142,47 @@ export const promptCategoryValuesMapping = mysqlTable(
       length: 36,
     }).notNull(),
     weight: smallint("weight").notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey(table.promptId, table.categoryValueId),
+    };
   }
 );
 
-// export const promptToCategoryValuesMapping = relations(
-//   promptCategoryValuesMapping,
-//   ({ one }) => ({
-//     prompt: one(prompt, {
-//       fields: [promptCategoryValuesMapping.promptId],
-//       references: [prompt.id],
-//     }),
-//     categoryValue: one(categoryValue, {
-//       fields: [promptCategoryValuesMapping.categoryValueId],
-//       references: [categoryValue.id],
-//     }),
-//   })
-// );
+export const promptToCategoryValuesMapping = relations(
+  promptCategoryValuesMapping,
+  ({ one }) => ({
+    prompt: one(prompt, {
+      fields: [promptCategoryValuesMapping.promptId],
+      references: [prompt.id],
+    }),
+    categoryValue: one(categoryValue, {
+      fields: [promptCategoryValuesMapping.categoryValueId],
+      references: [categoryValue.id],
+    }),
+  })
+);
 
 export type AiModel = InferModel<typeof aiModel>;
 export type Category = InferModel<typeof category>;
 export type CategoryValue = InferModel<typeof categoryValue>;
 export type Prompt = InferModel<typeof prompt>;
+export type PromptCategoryValuesMapping = InferModel<
+  typeof promptCategoryValuesMapping
+>;
+
+const getPromptWithCategoryValues = async (id: string) => {
+  const res = await db.query.prompt.findFirst({
+    where: eq(prompt.id, id),
+    with: {
+      promptToCategoryValuesMapping: { with: { categoryValue: true } },
+    },
+  });
+
+  return res;
+};
+
+export type PromptWithCategoryValues = NonNullable<
+  Awaited<ReturnType<typeof getPromptWithCategoryValues>>
+>;

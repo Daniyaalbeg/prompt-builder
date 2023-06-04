@@ -7,10 +7,9 @@ import { Loader2 } from "lucide-react";
 import { Prompt } from "@/db/schema";
 import { useRouter } from "next/navigation";
 import { debounce } from "@/lib/utils";
-import { Card, CardContent, CardHeader } from "../ui/card";
 
 const updatePromptSubject = (data: { id: string; subject: string }) => {
-  return fetch(`/api/prompt/subject/${data.id}`, {
+  return fetch(`/api/prompt/${data.id}/subject`, {
     method: "PUT",
     body: JSON.stringify({ subject: data.subject }),
   });
@@ -37,29 +36,22 @@ export const PromptSubject = ({ prompt }: { prompt: Prompt }) => {
   };
 
   return (
-    <div className="h-1/2 w-full">
-      <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold leading-none tracking-tight">
-            What is the Subject of your prompt?
-          </h3>
-        </CardHeader>
-        <CardContent>
-          <div className="relative">
-            <Textarea
-              className="bottom-0 left-0 right-0 top-0"
-              placeholder="Type the subject of your prompt..."
-              rows={5}
-              value={subject}
-              onChange={onChange}
-            />
-            {mutation.isLoading ? (
-              <Loader2 className="absolute bottom-2 right-2 animate-spin" />
-            ) : null}
-          </div>
-        </CardContent>
-        {/* <CardFooter></CardFooter> */}
-      </Card>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-8">
+      <h3 className="text-xl font-semibold leading-none tracking-tight">
+        What is the Subject of your prompt?
+      </h3>
+      <div className="relative w-4/6">
+        <Textarea
+          className="bottom-0 left-0 right-0 top-0 mx-auto"
+          placeholder="Type the subject of your prompt..."
+          rows={5}
+          value={subject}
+          onChange={onChange}
+        />
+        {mutation.isLoading ? (
+          <Loader2 className="absolute right-2 top-2 animate-spin" />
+        ) : null}
+      </div>
     </div>
   );
 };

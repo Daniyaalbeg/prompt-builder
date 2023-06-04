@@ -22,7 +22,7 @@ export const NewPromptButton = ({}: Props) => {
   };
 
   return (
-    <Button className="mb-2 w-full" onClick={createNewPost}>
+    <Button className="mb-2 w-full" onClick={createNewPost} variant="outline">
       {isLoading ? (
         <Loader2 className="animate-spin" size={24} />
       ) : (

@@ -15,6 +15,7 @@ import { AiModel } from "@/db/schema";
 import { useTheme } from "next-themes";
 import { Toggle } from "./ui/toggle";
 import { Moon, Sun } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 type BuilderNavProp = {
   user: User;
@@ -51,7 +52,12 @@ export const BuilderNav = ({ user, aiModels }: BuilderNavProp) => {
                     value={model.id}
                     disabled={!model.isAvailable}
                   >
-                    {model.name} {!model.isAvailable ? "(soon)" : null}
+                    {model.name}{" "}
+                    {!model.isAvailable ? (
+                      <Badge variant="secondary" className="ml-2">
+                        coming soon
+                      </Badge>
+                    ) : null}
                   </SelectItem>
                 );
               })}

@@ -23,15 +23,14 @@ const DashboardLayout = async ({ children }: DashboardLayoutProp) => {
   const aiModels = await fetchModels();
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex h-full flex-row bg-background">
+    <div className="flex h-full w-full flex-col">
+      <div className="flex h-full w-full flex-row bg-background">
         <div className="h-full min-w-[16rem] border-r">
-          {/* @ts-expect-error Async Server Component */}
           <SavedPrompts user={user} />
         </div>
-        <div className="flex h-full w-full flex-col">
+        <div className="flex h-full flex-1 flex-col">
           <BuilderNav user={user} aiModels={aiModels} />
-          <div className="flex-grow">{children}</div>
+          {children}
         </div>
       </div>
       <TailwindIndicator />
