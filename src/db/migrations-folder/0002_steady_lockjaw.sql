@@ -1,0 +1,1 @@
+ALTER TABLE `prompt` ADD `emoji` text DEFAULT ('🤔') NOT NULL;

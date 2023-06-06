@@ -4,13 +4,15 @@ import { cn } from "@/lib/utils";
 import { Check, Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { EmojiButton } from "./buttons/emoji-button";
 
 type Props = {
   id: string;
   title: string;
+  emoji: string;
 };
 
-export const PromptSidebar = ({ id, title }: Props) => {
+export const PromptSidebar = ({ id, title, emoji }: Props) => {
   const ref = useRef<HTMLInputElement>(null);
   const [editable, setEditable] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -34,6 +36,7 @@ export const PromptSidebar = ({ id, title }: Props) => {
     });
     setEditable(false);
     setLoading(false);
+    router.refresh();
   };
 
   useEffect(() => {
@@ -47,7 +50,7 @@ export const PromptSidebar = ({ id, title }: Props) => {
       onClick={onClick}
       onMouseLeave={() => setEditable(false)}
       className={cn(
-        "inline-flex h-10 w-full flex-shrink-0 items-center justify-start rounded-md py-2 pl-4 pr-2 text-sm font-medium text-primary ring-offset-background transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex h-10 w-full flex-shrink-0 items-center justify-start rounded-md py-2 pl-2 pr-2 text-sm font-medium text-primary ring-offset-background hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         { "bg-primary/80 text-primary-foreground": params && params.id === id },
         { "hover:bg-primary/80": params && params.id !== id }
       )}
@@ -58,7 +61,7 @@ export const PromptSidebar = ({ id, title }: Props) => {
             ref={ref}
             type="text"
             defaultValue={title}
-            className={cn("rounded-sm bg-primary/10", {
+            className={cn("ml-10 rounded-sm bg-primary/10", {
               "bg-primary/80 text-primary-foreground":
                 params && params.id === id,
             })}
@@ -75,12 +78,15 @@ export const PromptSidebar = ({ id, title }: Props) => {
           </button>
         </>
       ) : (
-        <p
-          onDoubleClick={() => setEditable(true)}
-          className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left"
-        >
-          {title || "Untitled"}
-        </p>
+        <div className="flex items-center justify-start">
+          <EmojiButton emoji={emoji} id={id} />
+          <p
+            onDoubleClick={() => setEditable(true)}
+            className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left"
+          >
+            {title || "Untitled"}
+          </p>
+        </div>
       )}
     </button>
   );

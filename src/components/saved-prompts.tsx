@@ -22,12 +22,13 @@ export const SavedPrompts = async ({ user }: Props) => {
       <div className="w-full px-2">
         <NewPromptButton />
       </div>
-      <div className="no-scrollbar flex w-full flex-col gap-1 overflow-y-scroll px-2">
+      <div className="no-scrollbar flex w-full flex-col gap-1 overflow-y-auto px-2">
         {prompts.map((prompt) => {
           return (
             <PromptSidebar
               id={prompt.id}
               title={prompt.title}
+              emoji={prompt.emoji}
               key={prompt.id}
             />
           );

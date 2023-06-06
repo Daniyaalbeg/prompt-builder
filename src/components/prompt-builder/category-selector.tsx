@@ -35,11 +35,11 @@ export default function CategorySelector({
   });
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-8">
+    <div className="flex h-full w-full flex-col items-center justify-start gap-8">
       <h3 className="text-lg font-semibold leading-none tracking-tight">
         Choose a {category.title} for your prompt?
       </h3>
-      <div className="grid flex-1 grid-flow-row gap-2 overflow-y-auto md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-flow-row gap-2 overflow-y-auto md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {data.map((cv) => {
           return (
             <CategoryOption

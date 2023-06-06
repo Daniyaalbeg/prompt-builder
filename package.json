@@ -13,6 +13,8 @@
   "dependencies": {
     "@lucia-auth/adapter-mysql": "^1.1.1",
     "@planetscale/database": "^1.7.0",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-popover": "^1.0.6",
     "@radix-ui/react-select": "^1.2.1",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-toggle": "^1.0.2",
@@ -27,6 +29,7 @@
     "clsx": "^1.2.1",
     "drizzle-orm": "^0.26.0",
     "drizzle-zod": "^0.4.1",
+    "emoji-picker-react": "^4.4.9",
     "eslint": "8.38.0",
     "eslint-config-next": "^13.4.4",
     "lucia-auth": "^1.6.0",

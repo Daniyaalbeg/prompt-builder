@@ -1,23 +1,27 @@
 "use client";
 
+import {
+  addCategoryToPrompt,
+  deleteCategoryFromPrompt,
+} from "@/actions/prompt";
 import { CategoryValue } from "@/db/schema";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useRef } from "react";
+import { MouseEvent, useRef, useTransition } from "react";
 
-const updatePromptCategoryValue = async (
-  id: string,
-  categoryValueId: string,
-  toDelete: boolean
-) => {
-  await fetch(`/api/prompt/${id}/categoryValue/${categoryValueId}`, {
-    method: toDelete ? "DELETE" : "PUT",
-    body: toDelete ? undefined : JSON.stringify({ weight: 1 }),
-  });
-};
+// const updatePromptCategoryValue = async (
+//   id: string,
+//   categoryValueId: string,
+//   toDelete: boolean
+// ) => {
+//   await fetch(`/api/prompt/${id}/categoryValue/${categoryValueId}`, {
+//     method: toDelete ? "DELETE" : "PUT",
+//     body: toDelete ? undefined : JSON.stringify({ weight: 1 }),
+//   });
+// };
 
 export const CategoryOption = ({
   cv,
@@ -28,15 +32,22 @@ export const CategoryOption = ({
   promptId: string;
   isSelected: boolean;
 }) => {
-  const router = useRouter();
-  const mutation = useMutation({
-    mutationFn: () => updatePromptCategoryValue(promptId, cv.id, isSelected),
-    onSuccess: router.refresh,
-  });
+  let [isPending, startTransition] = useTransition();
+
+  // const router = useRouter();
+  // const mutation = useMutation({
+  //   mutationFn: () => updatePromptCategoryValue(promptId, cv.id, isSelected),
+  //   onSuccess: router.refresh,
+  // });
   const containerRef = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
-    mutation.mutate();
+    // mutation.mutate();
+    if (isSelected) {
+      startTransition(() => deleteCategoryFromPrompt(promptId, cv.id));
+    } else {
+      startTransition(() => addCategoryToPrompt(promptId, cv.id));
+    }
   };
 
   const handleMouseMove = (event: MouseEvent<HTMLImageElement>) => {

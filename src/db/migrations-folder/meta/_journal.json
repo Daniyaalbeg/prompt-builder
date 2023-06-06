@@ -15,6 +15,13 @@
       "when": 1685228943171,
       "tag": "0001_bright_trauma",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1686084650273,
+      "tag": "0002_steady_lockjaw",
+      "breakpoints": true
     }
   ]
 }
