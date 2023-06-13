@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth/lucia";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { prompt } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 // import { revalidatePath } from "next/cache";
@@ -16,14 +16,14 @@ export const updatePromptEmoji = async (promptId: string, emoji: string) => {
   }
 
   try {
-    await db
+    await getDB()
       .update(prompt)
       .set({
         emoji,
       })
       .where(and(eq(prompt.id, promptId), eq(prompt.userId, user.userId)));
 
-    // revalidatePath(`/dashboard/create/${promptId}`);
+    // revalidatePath(`/dashboard/prompt/${promptId}`);
   } catch (e) {
     console.log(e);
     throw new Error("Error occurred");

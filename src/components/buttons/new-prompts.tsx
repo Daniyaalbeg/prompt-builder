@@ -5,20 +5,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
-type Props = {};
-
-export const NewPromptButton = ({}: Props) => {
+export const NewPromptButton = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
   const createNewPost = async () => {
     setIsLoading(true);
     const res = await fetch("/api/prompt", { method: "POST" });
     const { id } = await res.json();
-
-    const url = `/dashboard/create/${id}`;
-    router.push(url);
-    router.refresh();
     setIsLoading(false);
+    const url = `/dashboard/prompt/${id}/`;
+    router.refresh();
+    router.push(url);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { auth } from "@/auth/lucia";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { categoryValue } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -26,7 +26,7 @@ export async function GET(
   const { id } = params;
 
   try {
-    const res = await db
+    const res = await getDB()
       .select()
       .from(categoryValue)
       .where(eq(categoryValue.categoryId, id));

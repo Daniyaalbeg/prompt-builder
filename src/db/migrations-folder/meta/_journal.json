@@ -22,6 +22,27 @@
       "when": 1686084650273,
       "tag": "0002_steady_lockjaw",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1686165099808,
+      "tag": "0003_military_midnight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1686174171510,
+      "tag": "0004_opposite_kinsey_walden",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1686485031562,
+      "tag": "0005_windy_golden_guardian",
+      "breakpoints": true
     }
   ]
 }

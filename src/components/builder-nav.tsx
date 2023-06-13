@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "lucia-auth";
 import { useRouter } from "next/navigation";
 import {
   Select,
@@ -14,15 +13,16 @@ import {
 import { AiModel } from "@/db/schema";
 import { useTheme } from "next-themes";
 import { Toggle } from "./ui/toggle";
-import { Moon, Sun } from "lucide-react";
+import { DoorOpen, Moon, Sun } from "lucide-react";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 
 type BuilderNavProp = {
-  user: User;
   aiModels: AiModel[];
 };
 
-export const BuilderNav = ({ user, aiModels }: BuilderNavProp) => {
+export const BuilderNav = ({ aiModels }: BuilderNavProp) => {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
 
@@ -64,16 +64,36 @@ export const BuilderNav = ({ user, aiModels }: BuilderNavProp) => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        {/* <div className="bg-gradient-to-br from-blue-400 to-green-400 rounded-full h-4 w-4" />
-				<p className="text-gray-400 text-sm font-sans">prompt stuff</p> */}
       </div>
       <div className="flex items-center justify-center gap-4">
-        <button onClick={signOut}>Sign out {user.username}</button>
-        <Toggle onClick={toggleTheme}>
-          {" "}
-          {resolvedTheme === "dark" ? <Moon /> : <Sun />}{" "}
-        </Toggle>
+        <ToggleDarkMode
+          resolvedTheme={resolvedTheme}
+          toggleTheme={toggleTheme}
+        />
+        <Button variant="ghost" onClick={signOut}>
+          <DoorOpen />
+        </Button>
       </div>
     </div>
+  );
+};
+
+const ToggleDarkMode = ({
+  toggleTheme,
+  resolvedTheme,
+}: {
+  toggleTheme: () => void;
+  resolvedTheme: string | undefined;
+}) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return (
+    <Toggle onClick={toggleTheme}>
+      {resolvedTheme === "dark" ? <Moon /> : <Sun />}
+    </Toggle>
   );
 };

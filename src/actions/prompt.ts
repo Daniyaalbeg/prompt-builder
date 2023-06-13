@@ -1,6 +1,6 @@
 "use server";
 import { auth } from "@/auth/lucia";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { promptCategoryValuesMapping } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -20,13 +20,13 @@ export const addCategoryToPrompt = async (
   }
 
   try {
-    await db.insert(promptCategoryValuesMapping).values({
+    await getDB().insert(promptCategoryValuesMapping).values({
       promptId,
       weight,
       categoryValueId: categoryId,
     });
 
-    revalidatePath(`/dashboard/create/${promptId}`);
+    revalidatePath(`/dashboard/prompt/${promptId}`);
   } catch (e) {
     console.log(e);
     throw new Error("Error occurred");
@@ -46,7 +46,7 @@ export const deleteCategoryFromPrompt = async (
   }
 
   try {
-    await db
+    await getDB()
       .delete(promptCategoryValuesMapping)
       .where(
         and(
@@ -55,7 +55,7 @@ export const deleteCategoryFromPrompt = async (
         )
       );
 
-    revalidatePath(`/dashboard/create/${promptId}`);
+    revalidatePath(`/dashboard/prompt/${promptId}`);
   } catch (e) {
     console.log(e);
     throw new Error("Error occurred");

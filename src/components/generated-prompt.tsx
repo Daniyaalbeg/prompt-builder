@@ -1,7 +1,5 @@
-// "use client";
+"use client";
 
-import { Copy } from "lucide-react";
-import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { PromptWithCategoryValues } from "@/db/schema";
 import { CopyButton } from "./buttons/copy";
@@ -25,21 +23,14 @@ export const GeneratedPrompt = ({
 }: {
   prompt: PromptWithCategoryValues;
 }) => {
-  // const { data } = useQuery({
-  //   queryKey: ["prompt", prompt.id],
-  //   queryFn: () => getPrompt(prompt.id),
-  //   initialData: prompt,
-  // });
-  const generatedPrompt = prompt.subject
-    ? generatePrompt(prompt)
-    : "No Content";
+  const generatedPrompt = generatePrompt(prompt);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-start justify-between">
           <CardTitle> Your Prompt </CardTitle>
-          <CopyButton str={generatedPrompt} />
+          <CopyButton str={generatedPrompt || ""} />
         </div>
       </CardHeader>
       <CardContent>
@@ -51,9 +42,20 @@ export const GeneratedPrompt = ({
 
 const generatePrompt = (prompt: PromptWithCategoryValues) => {
   return [
-    prompt.subject,
-    ...prompt.promptToCategoryValuesMapping.map((cv) =>
-      cv.categoryValue.chunk.toLowerCase()
-    ),
+    prompt.subject.trim(),
+    ...prompt.promptToCategoryValuesMapping.map((cv) => {
+      const text = cv.variation ? cv.variation : cv.categoryValue.chunk;
+      if (cv.weight > 1) {
+        switch (cv.weight) {
+          case 1.5:
+            return `[${text.toLowerCase()}]`;
+          case 2:
+            return `[[${text.toLowerCase()}]]`;
+          default:
+            return `${text.toLowerCase()}`;
+        }
+      }
+      return cv.categoryValue.chunk.toLowerCase();
+    }),
   ].join(", ");
 };

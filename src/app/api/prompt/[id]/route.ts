@@ -1,5 +1,5 @@
 import { auth } from "@/auth/lucia";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { prompt } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
@@ -26,7 +26,7 @@ export async function GET(
   try {
     const { id } = params;
 
-    const res = await db.query.prompt.findFirst({
+    const res = await getDB().query.prompt.findFirst({
       where: eq(prompt.id, id),
       with: {
         promptToCategoryValuesMapping: { with: { categoryValue: true } },

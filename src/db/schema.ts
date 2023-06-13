@@ -10,7 +10,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { db } from "./db";
+import { getDB } from ".";
 // import { createInsertSchema, createSelectSchema, } from "drizzle-zod";
 
 // TODO Use Drizzle relations here https://orm.drizzle.team/docs/rqb
@@ -73,6 +73,8 @@ export const category = mysqlTable("category", {
   title: text("title").notNull(),
   metaChunks: json("meta_chunks").notNull(),
   negativeMetaChunks: json("negative_meta_chunks").notNull(),
+  suggestedValues: smallint("suggested_values").notNull().default(1),
+  suggestedValuesReason: text("suggested_values_reason").notNull().default(""),
   sortOrder: smallint("sort_order").notNull(),
   aiId: varchar("ai_id", {
     length: 36,
@@ -92,6 +94,8 @@ export const categoryValue = mysqlTable("category_value", {
     length: 36,
   }).primaryKey(),
   chunk: text("chunk").notNull(),
+  chunkVariations: json("chunk_variations").notNull().default([]),
+  description: text("description").notNull().default(""),
   categoryId: varchar("category_id", {
     length: 36,
   }).notNull(),
@@ -143,6 +147,7 @@ export const promptCategoryValuesMapping = mysqlTable(
       length: 36,
     }).notNull(),
     weight: smallint("weight").notNull(),
+    variation: text("variation"),
   },
   (table) => {
     return {
@@ -167,14 +172,23 @@ export const promptToCategoryValuesMapping = relations(
 
 export type AiModel = InferModel<typeof aiModel>;
 export type Category = InferModel<typeof category>;
-export type CategoryValue = InferModel<typeof categoryValue>;
+export type RawCategoryValue = InferModel<typeof categoryValue>;
 export type Prompt = InferModel<typeof prompt>;
 export type PromptCategoryValuesMapping = InferModel<
   typeof promptCategoryValuesMapping
 >;
 
+export type CategoryValue = Pick<
+  RawCategoryValue,
+  "id" | "chunk" | "description" | "categoryId" | "imageUrl" | "ai_id"
+> & {
+  chunkVariations: string[];
+  metaChunks: string[];
+  negativeMetaChunks: string[];
+};
+
 const getPromptWithCategoryValues = async (id: string) => {
-  const res = await db.query.prompt.findFirst({
+  const res = await getDB().query.prompt.findFirst({
     where: eq(prompt.id, id),
     with: {
       promptToCategoryValuesMapping: { with: { categoryValue: true } },

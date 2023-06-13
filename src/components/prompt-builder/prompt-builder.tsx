@@ -1,7 +1,12 @@
-import { Category, PromptWithCategoryValues, categoryValue } from "@/db/schema";
+import {
+  Category,
+  CategoryValue,
+  PromptWithCategoryValues,
+  categoryValue,
+} from "@/db/schema";
 
 import { PromptSubject } from "./subject";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { eq } from "drizzle-orm";
 import CategorySelector from "./category-selector";
 import { CategoryMapper } from "./category-mapper";
@@ -13,14 +18,14 @@ type Props = {
 
 export const PromptBuilder = async ({ categories, prompt }: Props) => {
   const promises = categories.map(async (c) => {
-    const res = await db
+    const res = await getDB()
       .select()
       .from(categoryValue)
       .where(eq(categoryValue.categoryId, c.id));
     return res;
   });
 
-  const allCategoryValues = await Promise.all(promises);
+  const allCategoryValues = (await Promise.all(promises)) as CategoryValue[][];
 
   return (
     <CategoryMapper>

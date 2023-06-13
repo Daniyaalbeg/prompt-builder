@@ -10,9 +10,9 @@ import { Icons } from "@/components/ui/icons";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function SignInForm({ className, ...props }: Props) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const router = useRouter();
@@ -35,8 +35,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         }),
       });
 
+      if (response.redirected) router.push(response.url);
       setIsLoading(false);
-      if (response.redirected) return router.push(response.url);
     } catch (e) {
       setIsLoading(false);
       console.log(e);

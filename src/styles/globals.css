@@ -26,6 +26,9 @@
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
  
+    /* Used for background hover states */
+    --secondary-hover: 210 40% 90%; 
+
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
  
@@ -60,6 +63,8 @@
  
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary-hover: 222.2 47.4% 20%; 
  
     --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;

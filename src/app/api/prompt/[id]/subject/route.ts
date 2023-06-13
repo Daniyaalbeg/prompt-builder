@@ -2,7 +2,7 @@ import { auth } from "@/auth/lucia";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { prompt } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -41,14 +41,14 @@ export async function PUT(
       return NextResponse.json("Not valid data", { status: 400 });
     }
 
-    const res = await db
+    const res = await getDB()
       .update(prompt)
       .set({
         subject: parsedData.data.subject,
       })
       .where(and(eq(prompt.userId, user.userId), eq(prompt.id, params.id)));
 
-    const path = request.nextUrl.searchParams.get("path") || "/";
+    const path = `/dashboard/prompt/${params.id}`;
     revalidatePath(path);
 
     if (res.rowsAffected !== 1) {

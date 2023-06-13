@@ -1,0 +1,1 @@
+ALTER TABLE `category_value` ADD `description` text DEFAULT ('') NOT NULL;

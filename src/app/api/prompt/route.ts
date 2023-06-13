@@ -1,7 +1,7 @@
 import { auth } from "@/auth/lucia";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { db } from "@/db/db";
+import { getDB } from "@/db";
 import { prompt } from "@/db/schema";
 import { randomUUID } from "crypto";
 
@@ -20,7 +20,7 @@ export const POST = async (request: NextRequest) => {
 
   const uuid = randomUUID();
 
-  const res = await db.insert(prompt).values({
+  const res = await getDB().insert(prompt).values({
     id: uuid,
     subject: "",
     userId: user.userId,
@@ -32,20 +32,3 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.json({ id: uuid });
 };
-
-// export async function GET(request: NextRequest) {
-//   const authHandler = auth.handleRequest({ cookies });
-//   const { user } = await authHandler.validateUser();
-
-//   if (!user) {
-//     return new Response("Not Authorised", {
-//       status: 401,
-//       statusText: "Not Authorised",
-//       headers: {
-//         "Content-Type": "application/json",
-//         location: "/sign-in",
-//       },
-//     });
-//   }
-
-// }
