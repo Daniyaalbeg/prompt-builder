@@ -27,7 +27,7 @@ export function SignUpForm({ className, ...props }: Props) {
 
     try {
       setIsLoading(true);
-      const response = await fetch("/api/sign-in", {
+      const response = await fetch("/api/sign-up", {
         method: "POST",
         body: JSON.stringify({
           email,
