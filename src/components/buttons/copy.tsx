@@ -16,7 +16,11 @@ export interface ButtonProps
   str: string;
 }
 
-export const CopyButton = ({ className, str, ...props }: ButtonProps) => {
+export const CopyButton = ({
+  className,
+  str = "Empty Prompt",
+  ...props
+}: ButtonProps) => {
   const [clicked, setClicked] = useState(false);
 
   const onClick = () => {

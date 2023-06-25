@@ -7,6 +7,8 @@ import { PromptWithCategoryValues } from "@/db/schema";
 import { useState } from "react";
 import { PromptTextEditor } from "./prompt-text-edit";
 import { Button } from "../ui/button";
+import { CopyButton } from "../buttons/copy";
+import { generatePrompt } from "../utils/generate-prompt";
 
 export const Details = ({ prompt }: { prompt: PromptWithCategoryValues }) => {
   const [toggledPromptText, setToggledPromptText] = useState(false);
@@ -55,6 +57,7 @@ export const Details = ({ prompt }: { prompt: PromptWithCategoryValues }) => {
           icon={<TextCursor size={16} />}
           tooltip="Edit Prompt Text"
         />
+        <CopyButton str={generatePrompt(prompt) || "No Prompt added yet."} />
       </div>
     </Card>
   );
