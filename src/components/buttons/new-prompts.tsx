@@ -14,7 +14,7 @@ export const NewPromptButton = () => {
     const res = await fetch("/api/prompt", { method: "POST" });
     const { id } = await res.json();
     setIsLoading(false);
-    const url = `/dashboard/prompt/${id}/`;
+    const url = `/dashboard/prompt/${id}/new`;
     router.refresh();
     router.push(url);
   };

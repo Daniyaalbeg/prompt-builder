@@ -71,7 +71,7 @@ export const BuilderNav = ({ aiModels }: BuilderNavProp) => {
           toggleTheme={toggleTheme}
         />
         <Button variant="ghost" onClick={signOut}>
-          <DoorOpen />
+          <DoorOpen size={20} />
         </Button>
       </div>
     </div>
@@ -93,7 +93,7 @@ const ToggleDarkMode = ({
 
   return (
     <Toggle onClick={toggleTheme}>
-      {resolvedTheme === "dark" ? <Moon /> : <Sun />}
+      {resolvedTheme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
     </Toggle>
   );
 };

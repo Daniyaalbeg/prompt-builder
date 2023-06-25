@@ -1,5 +1,5 @@
 import { NewPromptButton } from "@/components/buttons/new-prompts";
-import { PromptSidebar } from "@/components/prompt-sidebar";
+import { PromptSidebarItems } from "@/components/sidebar";
 import { getPrompt } from "@/server-requests/prompt";
 import { getUser } from "@/server-requests/user";
 
@@ -14,16 +14,7 @@ export default async function SideBar() {
           <NewPromptButton />
         </div>
         <div className="no-scrollbar flex w-full flex-col gap-1 overflow-y-auto px-2">
-          {prompts.map((prompt) => {
-            return (
-              <PromptSidebar
-                id={prompt.id}
-                title={prompt.title}
-                emoji={prompt.emoji}
-                key={prompt.id}
-              />
-            );
-          })}
+          <PromptSidebarItems prompts={prompts} />
         </div>
       </div>
     </div>

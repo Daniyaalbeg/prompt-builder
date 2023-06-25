@@ -128,7 +128,7 @@ export const prompt = mysqlTable("prompt", {
   title: text("title").notNull(),
   emoji: text("emoji").notNull().default("🤔"),
   subject: text("subject").notNull(),
-  generatedPrompt: text("prompt").notNull(),
+  generatedPrompt: text("prompt").notNull().default(""),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });

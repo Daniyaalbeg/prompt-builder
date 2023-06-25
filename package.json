@@ -37,6 +37,7 @@
     "emoji-picker-react": "^4.4.9",
     "eslint": "8.38.0",
     "eslint-config-next": "^13.4.5",
+    "framer-motion": "^10.12.17",
     "lucia-auth": "^1.6.0",
     "lucide-react": "^0.211.0",
     "mysql2": "^3.3.0",

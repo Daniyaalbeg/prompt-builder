@@ -1,11 +1,9 @@
 import { GeneratedPrompt } from "@/components/generated-prompt";
 import { PromptSettings } from "@/components/menu/prompt-settings";
 import { PromptBuilder } from "@/components/prompt-builder/prompt-builder";
-import { getDB } from "@/db";
-import { Category, category, prompt } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { getCategories } from "@/server-requests/categories";
+import { getPromptWithCategories } from "@/server-requests/prompt";
 import { redirect } from "next/navigation";
-import { cache } from "react";
 
 type Props = {
   params: {
@@ -13,30 +11,10 @@ type Props = {
   };
 };
 
-const getCategories = cache(async () => {
-  const categories: Category[] = await getDB()
-    .select()
-    .from(category)
-    .where(eq(category.aiId, "3a5a0b0d-0cdc-4000-bbf4-d7eb91d0b6ff"))
-    .orderBy(category.sortOrder);
-
-  return categories;
-});
-
-const getPrompt = cache(async (id: string) => {
-  const promptData = await getDB().query.prompt.findFirst({
-    where: eq(prompt.id, id),
-    with: {
-      promptToCategoryValuesMapping: { with: { categoryValue: true } },
-    },
-  });
-  return promptData;
-});
-
 export default async function NewPrompt({ params: { id } }: Props) {
   const [categories, promptData] = await Promise.all([
     getCategories(),
-    getPrompt(id),
+    getPromptWithCategories(id),
   ]);
 
   if (!promptData) redirect("/dashboard");
