@@ -12,6 +12,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "./ui/context-menu";
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {
   id: string;
@@ -19,39 +20,39 @@ type Props = {
   emoji: string;
 };
 
+const updateTitle = async ({ id, title }: { id: string; title: string }) => {
+  await fetch(`/api/prompt/${id}/title`, {
+    method: "PUT",
+    body: JSON.stringify({ title: title ?? "Untitled" }),
+  });
+};
+
 export const PromptSidebar = ({ id, title, emoji }: Props) => {
+  const router = useRouter();
   const ref = useRef<HTMLInputElement>(null);
   const [optimisticTitle, setText] = useState(title);
   const [editable, setEditable] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const params = useParams();
-
-  const updateTitle = async () => {
-    const newTitle = ref.current?.value;
-    if (newTitle === title) {
+  const { mutate, isLoading } = useMutation({
+    mutationFn: updateTitle,
+    onSuccess: () => {
+      router.refresh();
       setEditable(false);
-      return;
-    }
-    setLoading(true);
-    const res = await fetch(`/api/prompt/${id}/title`, {
-      method: "PUT",
-      body: JSON.stringify({ title: newTitle || "Untitled" }),
-    });
-    if (res.status !== 200) {
-      // Error out here
-    }
-    setText(newTitle || "Untitled");
-    setEditable(false);
-    setLoading(false);
-    router.refresh();
-  };
+    },
+  });
 
   useEffect(() => {
     if (editable) {
       ref.current?.focus();
     }
   }, [editable]);
+
+  const editText = () => {
+    if (title !== optimisticTitle) {
+      mutate({ id, title: optimisticTitle });
+    }
+    setEditable(false);
+  };
 
   return (
     <Link
@@ -68,12 +69,16 @@ export const PromptSidebar = ({ id, title, emoji }: Props) => {
           <input
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                updateTitle();
+                editText();
               }
             }}
-            onBlur={() => setEditable(false)}
+            onBlur={(e) => {
+              if (e.relatedTarget?.id === "check") return;
+              setEditable(false);
+            }}
             ref={ref}
             type="text"
+            onChange={(e) => setText(e.target.value)}
             defaultValue={optimisticTitle}
             className={cn("ml-10 w-36 rounded-sm bg-primary/10", {
               "bg-primary/80 text-primary-foreground":
@@ -81,10 +86,14 @@ export const PromptSidebar = ({ id, title, emoji }: Props) => {
             })}
           />
           <button
+            id="check"
             className=" mr-0 flex h-7 w-7 items-center justify-center rounded-md hover:bg-primary/90"
-            onClick={updateTitle}
+            onClick={(e) => {
+              editText();
+              e.stopPropagation();
+            }}
           >
-            {loading ? (
+            {isLoading ? (
               <Loader2 className="animate-spin" size={14} />
             ) : (
               <Check size={18} />

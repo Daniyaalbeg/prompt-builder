@@ -46,7 +46,6 @@ export async function PUT(
       .set({ title: parsedData.data.title, updatedAt: new Date() })
       .where(and(eq(prompt.id, params.id), eq(prompt.userId, user.userId)));
 
-    const path = request.nextUrl.searchParams.get("path") || "/";
     revalidatePath(`/dashboard/prompt/${params.id}`);
 
     return NextResponse.json({ revalidated: true }, { status: 200 });
