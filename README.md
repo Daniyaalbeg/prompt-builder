@@ -1,3 +1,18 @@
+## An open source prompt management tool
+### Currently under construction 🚧
+
+Things to add:
+- [ ] Update dirzzle to latest version
+- [ ] Add dashboard view to see an overview of each prompt
+- [ ] Fix optimistic UI issues
+- [ ] Next 13 font shift on dev server refresh
+- [ ] Generate images for all categories
+- [ ] Create sample data
+- [ ] Add pricing page
+- [ ] Implement OAuth and forget password
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
