@@ -1,6 +1,8 @@
 ## An open source prompt management tool
 ### Currently under construction 🚧
 
+Main app located at /dashboard
+
 Things to add:
 - [ ] Update dirzzle to latest version
 - [ ] Add dashboard view to see an overview of each prompt
