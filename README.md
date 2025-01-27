@@ -1,6 +1,3 @@
-# Status: Indefinite Hold
-## Hit multiple road blocks on image gen
-
 ## An open source prompt management tool
 ### Currently under construction 🚧
 
